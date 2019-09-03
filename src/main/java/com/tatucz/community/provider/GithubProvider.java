@@ -68,6 +68,7 @@ public class GithubProvider {
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(null, httpHeaders);
         ResponseEntity<String> response = restTemplate.exchange(USER_API, HttpMethod.GET, httpEntity, String.class, new HashMap<String, Object>());
         String res = response.getBody();
+        System.out.println(res);
         return JSONObject.parseObject(res, GithubUser.class);
     }
 }

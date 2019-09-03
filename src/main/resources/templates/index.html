@@ -21,12 +21,8 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">发现</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://github.com/login/oauth/authorize?client_id=385ae7feadc372282cdd&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    我
+            <li class="nav-item dropdown" th:if="${session.user != null}">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getLogin()}">
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">消息</a>
@@ -34,6 +30,11 @@
                     <a class="dropdown-item" href="#">退出登录</a>
                 </div>
             </li>
+
+            <li class="nav-item" th:if="${session.user == null}">
+                <a class="nav-link" href="https://github.com/login/oauth/authorize?client_id=385ae7feadc372282cdd&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a>
+            </li>
+
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
