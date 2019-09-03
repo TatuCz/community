@@ -2,6 +2,8 @@ package com.tatucz.community.controller;
 
 import com.tatucz.community.dto.AccessTokenDTO;
 import com.tatucz.community.dto.GithubUser;
+import com.tatucz.community.dto.UserDTO;
+import com.tatucz.community.mapper.UserMapper;
 import com.tatucz.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -17,10 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 获取access_token
@@ -34,6 +33,9 @@ public class AuthorizeController {
 
     private String accessToken;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
                            @RequestParam("state") int state,
@@ -42,6 +44,7 @@ public class AuthorizeController {
         GithubUser githubUser = githubProvider.getUserInfo(accessToken);
         if (githubUser != null) {
             httpServletRequest.getSession().setAttribute("user", githubUser);
+            saveGithubUser(githubUser); //session持久化
         }
         return "redirect:/";
     }
@@ -51,5 +54,15 @@ public class AuthorizeController {
     @ResponseBody
     public String user() {
         return githubProvider.getUserInfo(accessToken).toString();
+    }
+
+    private void saveGithubUser(GithubUser githubUser) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setAccountId(String.valueOf(githubUser.getId()));
+        userDTO.setNickname(githubUser.getLogin());
+        userDTO.setToken(UUID.randomUUID().toString());
+        userDTO.setCreateTime(System.currentTimeMillis());
+        userDTO.setModifiedTime(userDTO.getCreateTime());
+        userMapper.insert(userDTO);
     }
 }
