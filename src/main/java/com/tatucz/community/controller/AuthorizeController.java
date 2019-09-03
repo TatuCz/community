@@ -41,6 +41,6 @@ public class AuthorizeController {
 
     @GetMapping("/user")
     public String user() {
-        return githubProvider.getUserInfo(accessToken);
+        return githubProvider.getUserInfo(accessToken).toString();
     }
 }
