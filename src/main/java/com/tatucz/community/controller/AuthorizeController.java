@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -39,12 +41,13 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
                            @RequestParam("state") int state,
-                           HttpServletRequest httpServletRequest) {
+                           HttpServletRequest httpServletRequest,
+                           HttpServletResponse httpServletResponse) {
         accessToken = githubProvider.getAccessToken(new AccessTokenDTO(code, state));
         GithubUser githubUser = githubProvider.getUserInfo(accessToken);
         if (githubUser != null) {
-            httpServletRequest.getSession().setAttribute("user", githubUser);
             saveGithubUser(githubUser); //session持久化
+            httpServletResponse.addCookie(new Cookie("token", githubUser.getToken()));
         }
         return "redirect:/";
     }
@@ -60,7 +63,7 @@ public class AuthorizeController {
         UserDTO userDTO = new UserDTO();
         userDTO.setAccountId(String.valueOf(githubUser.getId()));
         userDTO.setNickname(githubUser.getLogin());
-        userDTO.setToken(UUID.randomUUID().toString());
+        userDTO.setToken(githubUser.getToken());
         userDTO.setCreateTime(System.currentTimeMillis());
         userDTO.setModifiedTime(userDTO.getCreateTime());
         userMapper.insert(userDTO);

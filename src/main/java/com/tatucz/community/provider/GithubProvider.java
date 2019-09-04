@@ -11,10 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created on 19-9-3.
@@ -69,6 +66,8 @@ public class GithubProvider {
         ResponseEntity<String> response = restTemplate.exchange(USER_API, HttpMethod.GET, httpEntity, String.class, new HashMap<String, Object>());
         String res = response.getBody();
         System.out.println(res);
-        return JSONObject.parseObject(res, GithubUser.class);
+        GithubUser githubUser = JSONObject.parseObject(res, GithubUser.class);
+        githubUser.setToken(UUID.randomUUID().toString());
+        return githubUser;
     }
 }

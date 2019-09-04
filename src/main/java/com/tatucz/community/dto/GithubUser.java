@@ -7,6 +7,7 @@ public class GithubUser {
     private String login;
     private int id;
     private String avatarUrl;
+    private String token;
 
     @Override
     public String toString() {
@@ -15,6 +16,14 @@ public class GithubUser {
                 ", id=" + id +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getLogin() {

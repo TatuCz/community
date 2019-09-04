@@ -14,6 +14,7 @@ public interface UserMapper {
     @Insert("INSERT INTO user(account_id, nickname, token, create_time, modified_time) VALUES (#{accountId}, #{nickname}, #{token}, #{createTime}, #{modifiedTime})")
     void insert(UserDTO userDTO);
 
-//    @Select("")
-//
+    @Select("SELECT id,account_id, nickname, token, create_time, modified_time FROM user WHERE token=#{token}")
+    public UserDTO findByToken(String token);
+
 }
