@@ -5,3 +5,8 @@
 - MyBatis
 - Redis
 - ...(待补充)
+
+
+- Flyway  
+mvn flyway:migrate
+
