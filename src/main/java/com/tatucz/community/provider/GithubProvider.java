@@ -63,11 +63,16 @@ public class GithubProvider {
         list.add("token " + accessToken);
         httpHeaders.put("Authorization", list);
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(null, httpHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(USER_API, HttpMethod.GET, httpEntity, String.class, new HashMap<String, Object>());
-        String res = response.getBody();
-        System.out.println(res);
-        GithubUser githubUser = JSONObject.parseObject(res, GithubUser.class);
-        githubUser.setToken(UUID.randomUUID().toString());
-        return githubUser;
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(USER_API, HttpMethod.GET, httpEntity, String.class, new HashMap<String, Object>());
+            String res = response.getBody();
+            System.out.println(res);
+            GithubUser githubUser = JSONObject.parseObject(res, GithubUser.class);
+            githubUser.setToken(UUID.randomUUID().toString());
+            return githubUser;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

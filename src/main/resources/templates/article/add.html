@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>发布 - 社区系统</title>
-    <link rel="stylesheet" href="css/community.css" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/community.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -48,7 +48,7 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发表帖子</h2>
             <hr>
-            <form action="">
+            <form action="/article/publish" method="post">
                 <div class="form-group">
                     <label for="title">标题</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="标题"/>
@@ -63,6 +63,14 @@
                     <label for="tag">标签(选填)</label>
                     <input type="text" class="form-control" id="tag" name="tag" placeholder="标签，逗号分隔"/>
                 </div>
+
+                <div th:if="${errorMsg} != null" >
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong th:text="${errorMsg}"></strong>
+                    </div>
+                </div>
+
 
                 <button type="submit" class="btn btn-success">发表</button>
             </form>
