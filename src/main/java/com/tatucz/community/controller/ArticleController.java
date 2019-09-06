@@ -68,15 +68,17 @@ public class ArticleController {
     private UserDTO getUserBySession(HttpServletRequest httpServletRequest) {
         UserDTO user = null;
         Cookie[] cookies = httpServletRequest.getCookies();
-        for (Cookie cookie : cookies) {
-            if ("token".equals(cookie.getName())) {
-                String token = cookie.getValue();
-                if (!StringUtils.isEmpty(token)) {
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        httpServletRequest.getSession().setAttribute("user", user);
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    String token = cookie.getValue();
+                    if (!StringUtils.isEmpty(token)) {
+                        user = userMapper.findByToken(token);
+                        if (user != null) {
+                            httpServletRequest.getSession().setAttribute("user", user);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
