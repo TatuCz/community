@@ -4,6 +4,7 @@ import com.tatucz.community.dto.ArticleDTO;
 import com.tatucz.community.dto.UserDTO;
 import com.tatucz.community.mapper.ArticleMapper;
 import com.tatucz.community.mapper.UserMapper;
+import com.tatucz.community.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +40,7 @@ public class ArticleController {
                             @RequestParam("content") String content,
                             @RequestParam("tag") String tag,
                             Model model) {
-        UserDTO user = getUserBySession(httpServletRequest);
+        UserDTO user = (UserDTO) httpServletRequest.getSession().getAttribute(SessionUtil.USER_ATTRIBUTE);
         if (user == null) {
             model.addAttribute("errorMsg", "用户未登录");
             return "article/add";
@@ -63,26 +64,6 @@ public class ArticleController {
 //            model.addAttribute("msg", "发布成功");
         return "redirect:/";
 
-    }
-
-    private UserDTO getUserBySession(HttpServletRequest httpServletRequest) {
-        UserDTO user = null;
-        Cookie[] cookies = httpServletRequest.getCookies();
-        if (cookies != null && cookies.length > 0) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    if (!StringUtils.isEmpty(token)) {
-                        user = userMapper.findByToken(token);
-                        if (user != null) {
-                            httpServletRequest.getSession().setAttribute("user", user);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        return user;
     }
 
     private ArticleDTO buildArticle(int uid, String title, String content, String tag) {
